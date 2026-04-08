@@ -15,6 +15,7 @@
   <meta property="og:url" content="https://ninoty.co.uk/travel-cot-hire-london.html" />
   <meta property="og:image" content="https://ninoty.co.uk/images/hero.jpg" />
   <meta property="og:site_name" content="Ninoty" />
+  <link rel="canonical" href="https://ninoty.co.uk/travel-cot-hire-london.html" />
 
   <!-- Favicon -->
   <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -239,7 +240,6 @@
             method="POST"
             data-netlify="true"
             netlify-honeypot="bot-field"
-            novalidate
           >
             <input type="hidden" name="form-name" value="quote-request" />
             <p class="hp-field"><label>Don't fill this out: <input name="bot-field" tabindex="-1" /></label></p>
@@ -429,12 +429,13 @@
     if(form){
       form.addEventListener('submit',function(e){
         e.preventDefault();
+        if(!form.reportValidity()) return;
         var anyChecked = itemChecks.some(function(cb){return cb.checked;});
         if(!anyChecked){alert('Please select at least one item.');return;}
         var btn = form.querySelector('.form-submit');
         btn.disabled=true; btn.textContent='Sending…';
         fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(form)).toString()})
-        .then(function(r){if(r.ok){form.reset();cotCb.checked=true;if(successMsg){successMsg.style.display='block';successMsg.scrollIntoView({behavior:'smooth',block:'nearest'});}}else{throw new Error();}})
+        .then(function(r){if(r.ok){form.reset();cotCb.checked=true;updateEndMin();btn.disabled=false;btn.textContent='Request a quote';if(successMsg){successMsg.style.display='block';successMsg.scrollIntoView({behavior:'smooth',block:'nearest'});}}else{throw new Error();}})
         .catch(function(){btn.disabled=false;btn.textContent='Request a quote';alert('Something went wrong. Please email hello@ninoty.co.uk');});
       });
     }
